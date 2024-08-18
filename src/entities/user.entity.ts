@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
+import { Cart } from './cart.entity'
 
 @Entity()
 export class User {
@@ -13,6 +20,10 @@ export class User {
 
   @Column('varchar')
   password: string
+
+  @OneToOne(() => Cart, { eager: true, cascade: true })
+  @JoinColumn()
+  cart: Cart
 
   @Column({ default: false })
   isActive: boolean

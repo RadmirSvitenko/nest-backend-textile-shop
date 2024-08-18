@@ -1,3 +1,4 @@
+import { CartService } from './../cart/cart.service'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/entities/user.entity'
@@ -12,6 +13,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly cartService: CartService,
   ) {}
 
   async hashPassword(password: string) {
@@ -31,25 +33,35 @@ export class UserService {
       password: hashDtoPassword,
     })
 
-    await this.userRepository.save(newUser)
+    await this.cartService.createCart(newUser.id)
+    const userCart = await this.cartService.getCartByUserId(newUser.id)
+
+    await this.userRepository.save({
+      username: dto.username,
+      email: dto.email,
+      password: hashDtoPassword,
+      cart: userCart,
+    })
 
     return {
       username: dto.username,
       email: dto.email,
+      cart: userCart,
       message: AppMessage.USER_CREATED,
     }
   }
 
   async publicResponseUser(findEmail: string) {
-    const findUser = this.userRepository.findOne({
+    const findUser = await this.userRepository.findOne({
       where: { email: findEmail },
     })
 
     if (findUser)
       return {
-        username: (await findUser).username,
-        email: (await findUser).email,
-        isActive: ((await findUser).isActive = true),
+        username: findUser.username,
+        email: findUser.email,
+        cart: findUser.cart,
+        isActive: (findUser.isActive = true),
       }
   }
 }

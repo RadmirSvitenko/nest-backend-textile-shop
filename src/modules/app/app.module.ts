@@ -6,6 +6,8 @@ import { UserModule } from '../users/user.module'
 import { AuthModule } from '../auth/auth.module'
 import { TokenModule } from '../token/token.module'
 import { ProductModule } from '../product/product.module'
+import { CartModule } from '../cart/cart.module'
+import { CartItemModule } from '../cart-item/cart-item.module'
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { ProductModule } from '../product/product.module'
     AuthModule,
     TokenModule,
     ProductModule,
+    CartModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

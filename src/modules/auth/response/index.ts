@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsBoolean, IsString } from 'class-validator'
+import { Cart } from 'src/entities/cart.entity'
 
 export class AuthUserResponse {
   @ApiProperty()
@@ -20,5 +21,5 @@ export class AuthUserResponse {
 
   @ApiProperty()
   @IsArray()
-  cart: any[]
+  cart: Cart
 }

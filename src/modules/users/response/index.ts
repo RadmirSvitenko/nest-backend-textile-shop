@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString } from 'class-validator'
+import { IsArray, IsString } from 'class-validator'
+import { Cart } from 'src/entities/cart.entity'
 
 export class RegisterUserResponse {
   @ApiProperty()
@@ -13,4 +14,8 @@ export class RegisterUserResponse {
   @ApiProperty()
   @IsString()
   message: string
+
+  @ApiProperty()
+  @IsArray()
+  cart: Cart
 }

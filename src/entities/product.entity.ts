@@ -6,10 +6,12 @@ import {
   JoinTable,
   OneToMany,
   Unique,
+  ManyToOne,
 } from 'typeorm'
 import { Tag } from './tag.entity'
 import { Image } from './image.entity'
 import { Category } from './category.entity'
+import { CartItem } from './cartItem.entity'
 
 @Unique(['title'])
 @Entity()
@@ -54,4 +56,10 @@ export class Product {
 
   @Column('varchar')
   brand: string
+
+  @ManyToOne(() => CartItem, (cartItem) => cartItem.product, {
+    nullable: true,
+    cascade: true,
+  })
+  cartItem: CartItem
 }

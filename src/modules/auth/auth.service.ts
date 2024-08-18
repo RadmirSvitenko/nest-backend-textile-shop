@@ -18,24 +18,30 @@ export class AuthService {
   async registerUsers(dto: CreateUserDTO): Promise<RegisterUserResponse> {
     const existUser = await this.userService.findUsersByEmail(dto.email)
     if (existUser) throw new BadRequestException(AppMessage.USER_EXIST)
-    return this.userService.createUser(dto)
+
+    const newUser = await this.userService.createUser(dto)
+    return newUser
   }
 
   async loginUser(dto: LoginUserDTO): Promise<AuthUserResponse> {
     const existUser = await this.userService.findUsersByEmail(dto.email)
     if (!existUser) throw new BadRequestException(AppMessage.USER_NOT_EXIST)
+
     const validatePassword = await bcrypt.compare(
       dto.password,
       existUser.password,
     )
+
     if (!validatePassword) throw new BadRequestException(AppMessage.WRONG_DATA)
     const userData = {
       name: existUser.username,
       email: existUser.email,
+      cart: existUser.cart,
     }
+
     const token = await this.tokenService.generateJwtToken(userData)
     const responseUser = await this.userService.publicResponseUser(dto.email)
-    const cart = []
-    return { ...responseUser, token, cart }
+
+    return { ...responseUser, token }
   }
 }
